@@ -70,5 +70,17 @@
     "item": "Dexametasona",
     "tipo": "ml",
     "paciente": "Sofia Rodrigues"
+  },
+  {
+    "hora": "03/11/2025 15:20:45",
+    "item": "Dipirona",
+    "tipo": "mg",
+    "paciente": "Kayque Carvalho"
+  },
+  {
+    "hora": "03/11/2025 15:27:15",
+    "item": "Dipirona",
+    "tipo": "mg",
+    "paciente": "Kayque Carvalho"
   }
 ]

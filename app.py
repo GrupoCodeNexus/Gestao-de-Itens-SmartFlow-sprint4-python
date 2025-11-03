@@ -58,7 +58,7 @@ def remover_item():
 
 
 # --- Carregamento Inicial dos Dados ---
-ESTOQUE_JSON_PATH = 'estoque.json'
+ESTOQUE_JSON_PATH = 'dados/estoque.json'
 estoque_data = carregar_json(ESTOQUE_JSON_PATH, [])
 
 # Variaveis globais para armazenar o estoque de duas formas para busca eficiente
@@ -67,10 +67,10 @@ estoque_por_nome = {item['nome'].lower(): item for item in estoque_data}
 
 estoque = estoque_por_codigo
 
-CARTOES_RFID_JSON_PATH = 'cartoes_rfid.json'
+CARTOES_RFID_JSON_PATH = 'dados/cartoes_rfid.json'
 cartoes_autorizados = carregar_json(CARTOES_RFID_JSON_PATH, {})
 
-HISTORICO_JSON_PATH = 'historico_saidas.json' # <--- ADIÇÃO: Nova constante para o caminho do arquivo do histórico
+HISTORICO_JSON_PATH = 'dados/historico_saidas.json' # <--- ADIÇÃO: Nova constante para o caminho do arquivo do histórico
 historico = carregar_json(HISTORICO_JSON_PATH, [])
 
 status_carrinho = {
