@@ -8,15 +8,14 @@ PACIENTES_JSON = "dados/pacientes/pacientes.json"
 
 
 def carregar_pacientes():
-    if not os.path.exists('dados/pacientes.json'):
+    if not os.path.exists(PACIENTES_JSON):
         return []
 
-    if os.path.getsize('dados/pacientes.json') == 0:
+    if os.path.getsize(PACIENTES_JSON) == 0:
         return []
 
-    with open('dados/pacientes.json', 'r') as f:
+    with open(PACIENTES_JSON, 'r', encoding="utf-8") as f:
         return json.load(f)
-
 
 
 def salvar_pacientes(data):
