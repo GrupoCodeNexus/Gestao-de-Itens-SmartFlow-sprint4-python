@@ -8,12 +8,15 @@ PACIENTES_JSON = "dados/pacientes/pacientes.json"
 
 
 def carregar_pacientes():
-    if not os.path.exists(PACIENTES_JSON):
-        os.makedirs(os.path.dirname(PACIENTES_JSON), exist_ok=True)
-        with open(PACIENTES_JSON, "w", encoding="utf-8") as f:
-            json.dump([], f, indent=4, ensure_ascii=False)
-    with open(PACIENTES_JSON, "r", encoding="utf-8") as f:
+    if not os.path.exists('dados/pacientes.json'):
+        return []
+
+    if os.path.getsize('dados/pacientes.json') == 0:
+        return []
+
+    with open('dados/pacientes.json', 'r') as f:
         return json.load(f)
+
 
 
 def salvar_pacientes(data):
