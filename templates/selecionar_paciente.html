@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}Selecionar Paciente{% endblock %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold text-sabaraBlue mb-6 text-center">Selecionar Paciente / Criar Novo</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+  <!-- Selecionar existente -->
+  <div class="bg-white p-6 rounded-xl shadow-lg border border-sabaraBlue/20">
+    <h3 class="text-xl font-semibold text-sabaraBlue mb-4">Pacientes Existentes</h3>
+    {% if pacientes|length == 0 %}
+      <p class="text-gray-600 italic">Nenhum paciente registrado ainda.</p>
+    {% else %}
+      <ul class="space-y-3">
+        {% for p in pacientes %}
+        <li class="flex items-center justify-between bg-blue-50 border border-sabaraBlue/20 rounded-lg px-4 py-2">
+          <div>
+            <div class="font-semibold">{{ p.nome }}</div>
+            <div class="text-xs text-gray-600">ID: {{ p.id }} | {{ p.local }}</div>
+          </div>
+          <a href="/paciente/entrar/{{ p.id }}" class="bg-sabaraBlue hover:bg-blue-900 text-white px-3 py-1 rounded-lg text-sm">
+            Selecionar
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+  <!-- Criar novo -->
+  <div class="bg-white p-6 rounded-xl shadow-lg border border-sabaraBlue/20">
+    <h3 class="text-xl font-semibold text-green-700 mb-4">Cadastrar Novo Paciente</h3>
+
+    <form action="/paciente/criar" method="POST" class="space-y-3">
+
+      <input class="w-full p-3 border rounded-lg" required type="text" name="nome" placeholder="Nome do Paciente">
+      <input class="w-full p-3 border rounded-lg" required type="number" min="0" name="idade" placeholder="Idade">
+      <input class="w-full p-3 border rounded-lg" required type="text" name="responsavel" placeholder="Nome do responsável">
+
+      <input class="w-full p-3 border rounded-lg" required type="number" name="local" placeholder="Local/Leito (Ex: 90103)">
+      <textarea class="w-full p-3 border rounded-lg" name="observacao" placeholder="Observações"></textarea>
+
+      <button class="bg-green-600 text-white w-full p-3 rounded-lg hover:bg-green-800">
+        Criar Paciente e Continuar
+      </button>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}
