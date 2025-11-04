@@ -1,0 +1,12 @@
+[
+  { "id": "E001", "nome": "Adrenalina",       "tipo": "ampola",       "quantidade": 12, "cost_purchase": 3590, "cost_internal": 4000, "cost_patient": 4500 },
+  { "id": "E002", "nome": "Atropina",         "tipo": "ampola",       "quantidade": 10, "cost_purchase": 3250, "cost_internal": 3800, "cost_patient": 4200 },
+  { "id": "E003", "nome": "Amiodarona",       "tipo": "ampola",       "quantidade": 8,  "cost_purchase": 4890, "cost_internal": 5200, "cost_patient": 5900 },
+  { "id": "E004", "nome": "Morfina",          "tipo": "ampola",       "quantidade": 6,  "cost_purchase": 5570, "cost_internal": 6000, "cost_patient": 6500 },
+  { "id": "E005", "nome": "Dipirona",         "tipo": "ml",           "quantidade": 200, "cost_purchase": 45, "cost_internal": 60, "cost_patient": 90 },
+  { "id": "E006", "nome": "Paracetamol",      "tipo": "ml",           "quantidade": 200, "cost_purchase": 39, "cost_internal": 50, "cost_patient": 80 },
+  { "id": "E007", "nome": "Dexametasona",     "tipo": "ml",           "quantidade": 140, "cost_purchase": 92, "cost_internal": 120, "cost_patient": 180 },
+  { "id": "E008", "nome": "Glicose 50%",      "tipo": "frasco",       "quantidade": 20,  "cost_purchase": 1490, "cost_internal": 1800, "cost_patient": 2000 },
+  { "id": "E009", "nome": "Soro Fisiológico", "tipo": "frasco",       "quantidade": 18,  "cost_purchase": 950, "cost_internal": 1200, "cost_patient": 1500 },
+  { "id": "E010", "nome": "Diazepam",         "tipo": "comprimido",   "quantidade": 25,  "cost_purchase": 480, "cost_internal": 600, "cost_patient": 800 }
+]
