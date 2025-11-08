@@ -214,12 +214,12 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = url.toString();
   });
 
-  // editar - abrir modal e carregar item
+  // abrir modal de edição
   document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
+    btn.addEventListener('click', async () => {
       const id = btn.dataset.id;
       try {
-        const res = await fetch(`/estoque/get/${id}`);
+        const res = await fetch(`{{ url_for('estoque_bp.get_item', item_id='') }}/${id}`);
         const body = await res.json();
         if (!body.success) {
           alert(body.mensagem || "Erro ao carregar item");
@@ -249,13 +249,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('edit-modal').classList.add('hidden');
   });
 
-  // submit edição via fetch
+  // submit edição
   document.getElementById('edit-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('edit-id').value;
     const fd = new FormData(e.target);
     try {
-      const res = await fetch(`/estoque/editar/${id}`, {
+      const res = await fetch(`{{ url_for('estoque_bp.editar_item', item_id='') }}/${id}`, {
         method: 'POST',
         body: fd
       });
@@ -272,13 +272,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // delete
+  // deletar item
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const id = btn.dataset.id;
       if (!confirm("Tem certeza que deseja remover este item?")) return;
       try {
-        const res = await fetch(`/estoque/remover/${id}`, { method: 'POST' });
+        const res = await fetch(`{{ url_for('estoque_bp.remover_item', item_id='') }}/${id}`, {
+          method: 'POST'
+        });
         const body = await res.json();
         if (body.success) {
           alert(body.mensagem);

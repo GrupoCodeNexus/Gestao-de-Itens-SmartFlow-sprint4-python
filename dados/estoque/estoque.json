@@ -1,9 +1,9 @@
 [
   {
     "id": "g1ABT001",
-    "nome": "Amoxicilina 500mg",
+    "nome": "Amoxicilina 500g",
     "presentation_value": 500,
-    "tipo": "mg",
+    "tipo": "g",
     "quantidade": 36,
     "gaveta": "g1ABT",
     "cost_purchase": 4000,
@@ -420,7 +420,7 @@
     "descricao": "Analgesico opioide"
   },
   {
-    "id": "g5EM1001",
+    "id": "g5E1001",
     "nome": "Adrenalina 500mg",
     "presentation_value": 500,
     "tipo": "mg",
@@ -432,7 +432,7 @@
     "descricao": "Medicamento de emergência para choque"
   },
   {
-    "id": "g5EM1002",
+    "id": "g5E1002",
     "nome": "Atropina 50mg",
     "presentation_value": 50,
     "tipo": "mg",
@@ -444,7 +444,7 @@
     "descricao": "Controle de bradicardia"
   },
   {
-    "id": "g5EM1003",
+    "id": "g5E1003",
     "nome": "Ranitidina 100un",
     "presentation_value": 100,
     "tipo": "un",
@@ -456,7 +456,7 @@
     "descricao": "Medicamento antiácido"
   },
   {
-    "id": "g5EM1004",
+    "id": "g5E1004",
     "nome": "Solução Salina 50un",
     "presentation_value": 50,
     "tipo": "un",
@@ -468,7 +468,7 @@
     "descricao": "Reposição de fluidos"
   },
   {
-    "id": "g5EM1005",
+    "id": "g5E1005",
     "nome": "Adrenalina 500ml",
     "presentation_value": 500,
     "tipo": "ml",
@@ -480,7 +480,7 @@
     "descricao": "Medicamento de emergência para choque"
   },
   {
-    "id": "g6EM2001",
+    "id": "g6E2001",
     "nome": "Heparina 100un",
     "presentation_value": 100,
     "tipo": "un",
@@ -492,7 +492,7 @@
     "descricao": "Anticoagulante para prevenção de trombose"
   },
   {
-    "id": "g6EM2002",
+    "id": "g6E2002",
     "nome": "Cloreto de Sódio 0,9% 250ml",
     "presentation_value": 250,
     "tipo": "ml",
@@ -504,7 +504,7 @@
     "descricao": "Reposição de eletrólitos"
   },
   {
-    "id": "g6EM2003",
+    "id": "g6E2003",
     "nome": "Dextrose 5% 250ml",
     "presentation_value": 250,
     "tipo": "ml",
@@ -516,7 +516,7 @@
     "descricao": "Reposição de energia e fluidos"
   },
   {
-    "id": "g6EM2004",
+    "id": "g6E2004",
     "nome": "Solução Glicosada 10% 500ml",
     "presentation_value": 500,
     "tipo": "ml",
@@ -528,7 +528,7 @@
     "descricao": "Reposição de glicose e energia"
   },
   {
-    "id": "g6EM2005",
+    "id": "g6E2005",
     "nome": "Heparina 50un",
     "presentation_value": 50,
     "tipo": "un",

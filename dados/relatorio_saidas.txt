@@ -1,0 +1,1 @@
+{"hora": "07/11/2025 23:10:54", "item": "Ciprofloxacino 100mg", "tipo": "mg", "paciente": "P0001", "quantidade": 2, "valor_unit_centavos": 5000, "valor_total_centavos": 10000}
