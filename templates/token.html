@@ -98,17 +98,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // Bloco para diminuir quanridade 'decrease-btn'
   document.querySelectorAll(".decrease-btn").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       const id = e.currentTarget.dataset.id;
-      // remove 1
+      const qtySpan = document.getElementById("qty-"+id);
+      const currentQty = parseInt(qtySpan.innerText || "0");
+
+      // Se a quantidade já for 0, não faz nada.
+      if (currentQty <= 0) {
+        return; 
+      }
+
       await fetch(`/token/api/pendente/${pacienteId}/remove`, {
         method: "POST",
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({item_id: id, qty: 1})
       });
-      const qtySpan = document.getElementById("qty-"+id);
-      qtySpan.innerText = Math.max(0, parseInt(qtySpan.innerText || "0") - 1);
+      
+      // Atualiza a UI (agora só executa se currentQty > 0) para não diminuir além do necessário
+      qtySpan.innerText = currentQty - 1; 
+      
       const stockSpan = document.getElementById("stock-"+id);
       stockSpan.innerText = parseInt(stockSpan.innerText) + 1;
       await refreshResumoUI();
