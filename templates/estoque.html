@@ -93,7 +93,7 @@
       </thead>
       <tbody>
         {% for item in estoque %}
-        <tr class="border-b">
+        <tr class="border-b text-center">
           <td class="px-4 py-2 font-mono">{{ item.id }}</td>
           <td class="px-4 py-2">{{ item.nome }}</td>
           <td class="px-4 py-2">{{ item.presentation_value }} {{ item.tipo }}</td>
@@ -131,7 +131,7 @@
 </div>
 
 <!-- Modal Edit -->
-<div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+<div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-start justify-center z-50 pt-20">
   <div class="bg-white rounded-lg p-6 w-11/12 max-w-2xl">
     <h3 class="text-lg font-semibold mb-4">Editar Item</h3>
     <form id="edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
