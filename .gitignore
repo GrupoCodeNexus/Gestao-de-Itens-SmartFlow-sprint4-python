@@ -1,0 +1,4 @@
+# Ignora diretórios de cache de bytecode do Python
+__pycache__/
+
+venv/
