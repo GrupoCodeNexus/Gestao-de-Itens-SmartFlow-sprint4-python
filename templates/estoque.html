@@ -2,107 +2,298 @@
 {% block title %}Estoque{% endblock %}
 
 {% block content %}
+<div class="max-w-6xl mx-auto p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-semibold text-green-800">📦 Itens em Estoque</h2>
+    <div class="flex items-center gap-2">
+      <input id="searchInput" type="search" placeholder="Pesquisar por nome ou id..."
+             class="p-2 border rounded-md" value="{{ q }}">
+      <select id="filterGaveta" class="p-2 border rounded-md">
+        <option value="">Todas as Gavetas</option>
+        {% for k, v in gavetas.items() %}
+          <option value="{{ k }}" {% if gaveta_filter==k %}selected{% endif %}>{{ k }} — {{ v }}</option>
+        {% endfor %}
+      </select>
+      <button id="btn-search" class="bg-sabaraBlue text-white px-4 py-2 rounded">Filtrar</button>
+      <button id="toggle-form" class="bg-green-600 text-white px-4 py-2 rounded">+ Adicionar Item</button>
+    </div>
+  </div>
 
-<h3 class="text-xl font-semibold text-green-800 mb-2">📦 Itens em Estoque</h3>
+  <!-- Form (collapsible) -->
+  <div id="form-area" class="mb-6 bg-white border rounded-lg p-4 shadow hidden">
+    <form id="add-form" action="{{ url_for('estoque_bp.adicionar_item') }}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- left col -->
+      <div>
+        <label class="block text-sm font-medium">Nome</label>
+        <input name="nome" required class="w-full p-2 border rounded" />
 
-{% if success_message %}
-<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-    <strong class="font-bold">Sucesso:</strong>
-    <span class="block sm:inline">{{ success_message }}</span>
+        <div class="flex gap-2 mt-2">
+          <div class="w-1/2">
+            <label class="block text-sm font-medium">Apresentação (valor)</label>
+            <input name="presentation_value" required type="number" min="0" class="w-full p-2 border rounded" />
+          </div>
+          <div class="w-1/2">
+            <label class="block text-sm font-medium">Tipo</label>
+            <select name="tipo" required class="w-full p-2 border rounded">
+              {% for code, label in types_list %}
+                <option value="{{ code }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <label class="block text-sm font-medium mt-3">Gaveta</label>
+        <select name="gaveta" required class="w-full p-2 border rounded">
+          {% for k, v in gavetas.items() %}
+            <option value="{{ k }}">{{ k }} — {{ v }}</option>
+          {% endfor %}
+        </select>
+
+        <label class="block text-sm font-medium mt-3">Quantidade</label>
+        <input name="quantidade" type="number" min="0" value="0" class="w-full p-2 border rounded" />
+      </div>
+
+      <!-- right col costs & extra -->
+      <div>
+        <label class="block text-sm font-medium">Descrição (opcional)</label>
+        <textarea name="descricao" rows="3" class="w-full p-2 border rounded"></textarea>
+
+        <div class="grid grid-cols-1 gap-2 mt-3">
+          <label class="block text-sm font-medium">Custo de Compra (R$)</label>
+          <input name="cost_purchase" placeholder="Ex: 39.00" class="w-full p-2 border rounded" />
+
+          <label class="block text-sm font-medium mt-2">Custo Interno (R$)</label>
+          <input name="cost_internal" placeholder="Ex: 50.00" class="w-full p-2 border rounded" />
+
+          <label class="block text-sm font-medium mt-2">Custo ao Paciente (R$)</label>
+          <input name="cost_patient" placeholder="Ex: 80.00" class="w-full p-2 border rounded" />
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Salvar Item</button>
+          <button type="button" id="btn-cancel-add" class="bg-gray-200 px-4 py-2 rounded">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- tabela -->
+  <div class="bg-white border rounded-lg shadow overflow-x-auto">
+    <table class="w-full table-auto">
+      <thead class="bg-green-50">
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Nome</th>
+          <th class="px-4 py-2">Apresentação</th>
+          <th class="px-4 py-2">Gaveta</th>
+          <th class="px-4 py-2">Quantidade</th>
+          <th class="px-4 py-2">Custo Paciente</th>
+          <th class="px-4 py-2">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in estoque %}
+        <tr class="border-b text-center">
+          <td class="px-4 py-2 font-mono">{{ item.id }}</td>
+          <td class="px-4 py-2">{{ item.nome }}</td>
+          <td class="px-4 py-2">{{ item.presentation_value }} {{ item.tipo }}</td>
+          <td class="px-4 py-2">{{ item.gaveta }}</td>
+          <td class="px-4 py-2">{{ item.quantidade }}</td>
+          <td class="px-4 py-2">R$ {{ '%.2f'|format(item.cost_patient/100) }}</td>
+          <td class="px-4 py-2">
+            <div class="flex items-center gap-2">
+              <button class="edit-btn" data-id="{{ item.id }}" title="Editar">
+                <img src="{{ url_for('static', filename='../static/assets/editIcon.png') }}" alt="edit" class="w-5 h-5"/>
+              </button>
+              <button class="delete-btn text-red-600" data-id="{{ item.id }}" title="Remover"> 
+                <img src="{{ url_for('static', filename='../static/assets/delete.png') }}" alt="del" class="w-5 h-5"/>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- paginação simples -->
+    <div class="p-4 flex items-center justify-between">
+      <div>Página {{ page }} de {{ total_pages }}</div>
+      <div class="flex gap-2">
+        {% if page > 1 %}
+          <a href="{{ url_for('estoque_bp.listar_estoque', page=page-1, q=q, gaveta=gaveta_filter) }}" class="px-3 py-1 border rounded">Anterior</a>
+        {% endif %}
+        {% if page < total_pages %}
+          <a href="{{ url_for('estoque_bp.listar_estoque', page=page+1, q=q, gaveta=gaveta_filter) }}" class="px-3 py-1 border rounded">Próxima</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
-{% endif %}
 
-{% if error_message %}
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-    <strong class="font-bold">Erro:</strong>
-    <span class="block sm:inline">{{ error_message }}</span>
+<!-- Modal Edit -->
+<div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-start justify-center z-50 pt-20">
+  <div class="bg-white rounded-lg p-6 w-11/12 max-w-2xl">
+    <h3 class="text-lg font-semibold mb-4">Editar Item</h3>
+    <form id="edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" name="id" id="edit-id" />
+      <div>
+        <label class="block text-sm font-medium">Nome</label>
+        <input id="edit-nome" name="nome" class="w-full p-2 border rounded" />
+        <div class="flex gap-2 mt-2">
+          <div class="w-1/2">
+            <label class="block text-sm font-medium">Apresentação (valor)</label>
+            <input id="edit-presentation_value" name="presentation_value" type="number" min="0" class="w-full p-2 border rounded" />
+          </div>
+          <div class="w-1/2">
+            <label class="block text-sm font-medium">Tipo</label>
+            <select id="edit-tipo" name="tipo" class="w-full p-2 border rounded">
+              {% for code, label in types_list %}
+                <option value="{{ code }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <label class="block text-sm font-medium mt-3">Gaveta</label>
+        <select id="edit-gaveta" name="gaveta" class="w-full p-2 border rounded">
+          {% for k, v in gavetas.items() %}
+            <option value="{{ k }}">{{ k }} — {{ v }}</option>
+          {% endfor %}
+        </select>
+
+        <label class="block text-sm font-medium mt-3">Quantidade</label>
+        <input id="edit-quantidade" name="quantidade" type="number" min="0" class="w-full p-2 border rounded" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Descrição (opcional)</label>
+        <textarea id="edit-descricao" name="descricao" rows="3" class="w-full p-2 border rounded"></textarea>
+
+        <div class="grid grid-cols-1 gap-2 mt-3">
+          <label class="block text-sm font-medium">Custo de Compra (R$)</label>
+          <input id="edit-cost_purchase" name="cost_purchase" placeholder="Ex: 39.00" class="w-full p-2 border rounded" />
+
+          <label class="block text-sm font-medium mt-2">Custo Interno (R$)</label>
+          <input id="edit-cost_internal" name="cost_internal" placeholder="Ex: 50.00" class="w-full p-2 border rounded" />
+
+          <label class="block text-sm font-medium mt-2">Custo ao Paciente (R$)</label>
+          <input id="edit-cost_patient" name="cost_patient" placeholder="Ex: 80.00" class="w-full p-2 border rounded" />
+        </div>
+
+        <div class="mt-4 flex gap-2 justify-end">
+          <button type="button" id="close-edit" class="px-4 py-2 border rounded">Cancelar</button>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-{% endif %}
 
-<table class="w-full table-auto border-collapse">
-  <thead>
-    <tr class="bg-green-100">
-      <th class="px-4 py-2 border">Código</th>
-      <th class="px-4 py-2 border">Nome</th>
-      <th class="px-4 py-2 border">Tipo</th>
-      <th class="px-4 py-2 border">Quantidade</th>
-      <th class="px-4 py-2 border">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in estoque %}
-    <tr id="row-{{ loop.index0 }}">
-      <td id="codigo-{{ loop.index0 }}" class="px-4 py-2 border">{{ item.codigo }}</td>
-      <td id="nome-{{ loop.index0 }}" class="px-4 py-2 border">{{ item.nome }}</td>
-      <td id="tipo-{{ loop.index0 }}" class="px-4 py-2 border">{{ item.tipo }}</td>
-      <td id="quantidade-{{ loop.index0 }}" class="px-4 py-2 border">{{ item.quantidade }}</td>
-       <td class="flex justify-center items-center gap-2">
-        <button onclick="editarLinha(this)" class="bg-yellow-400 hover: yellow-600 text-gray-800 font-bold py-1 px-2 rounded-md text-sm">Editar</button>
-        <form action="/remover_item" method="post" onsubmit="return confirm('Tem certeza que deseja remover este item?');" class="inline-block">
-          <input type="hidden" name="codigo" value="{{ item.codigo }}">
-          |
-          <button type="submit" class="bg-red-500 text-white font-semibold px-4 py-1 rounded hover:bg-red-600 transition">Remover</button>
-        </form>
-        </td>
-  </td>
-</tr>
+{% endblock %}
 
-    {% endfor %}
-  </tbody>
-</table>
-
-<h3 class="text-xl font-semibold mt-8 mb-4 text-green-800 flex items-center gap-2">➕ Adicionar Novo Item ao Estoque</h3>
-
-<form action="/adicionar_estoque" method="post" class="mb-8 p-4 border border-green-200 rounded-lg bg-green-50">
-  <div class="mb-4">
-    <label for="codigo" class="block text-gray-700 text-sm font-bold mb-2">Código (Único):</label>
-    <input type="text" id="codigo" name="codigo"
-           class="w-full p-3 border-2 border-green-400 rounded-lg focus:outline-none"
-           placeholder="Ex: MED005, ATB001..." required />
-  </div>
-  <div class="mb-4">
-    <label for="nome" class="block text-gray-700 text-sm font-bold mb-2">Nome do Item:</label>
-    <input type="text" id="nome" name="nome"
-           class="w-full p-3 border-2 border-green-400 rounded-lg focus:outline-none"
-           placeholder="Ex: Ibuprofeno, Luvas Estéreis..." required />
-  </div>
-  <div class="mb-4">
-    <label for="tipo" class="block text-gray-700 text-sm font-bold mb-2">Tipo:</label>
-    <input type="text" id="tipo" name="tipo"
-           class="w-full p-3 border-2 border-green-400 rounded-lg focus:outline-none"
-           placeholder="Ex: Gota, MG, ML, Unidade..." required />
-  </div>
-  <div class="mb-4">
-    <label for="quantidade" class="block text-gray-700 text-sm font-bold mb-2">Quantidade Inicial:</label>
-    <input type="number" id="quantidade" name="quantidade" value="1" min="0"
-           class="w-full p-3 border-2 border-green-400 rounded-lg focus:outline-none" required />
-  </div>
-  <button type="submit"
-          class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow w-full">
-    Adicionar Novo Item ao Estoque
-  </button>
-</form>
+{% block scripts %}
 <script>
-function editarLinha(botao) {
-  const linha = botao.parentElement.parentElement;
-  const colunas = linha.querySelectorAll('td');
-  
-  if (botao.textContent === 'Editar') {
-    // Trocar células para inputs (exceto a última coluna de ações)
-    for (let i = 0; i < colunas.length - 1; i++) {
-      const texto = colunas[i].textContent;
-      colunas[i].innerHTML = `<input type="text" value="${texto}" style="width: 90%;">`;
-    }
-    botao.textContent = 'Salvar';
-  } else {
-    // Salvar valores dos inputs e trocar para texto normal
-    for (let i = 0; i < colunas.length - 1; i++) {
-      const input = colunas[i].querySelector('input');
-      colunas[i].textContent = input.value;
-    }
-    botao.textContent = 'Editar';
-  }
-}
-</script>
+document.addEventListener("DOMContentLoaded", () => {
+  // toggle form
+  const toggleBtn = document.getElementById("toggle-form");
+  const formArea = document.getElementById("form-area");
+  const cancelAdd = document.getElementById("btn-cancel-add");
+  toggleBtn.addEventListener("click", () => formArea.classList.toggle("hidden"));
+  cancelAdd.addEventListener("click", () => formArea.classList.add("hidden"));
 
+  // search/filter
+  const searchInput = document.getElementById("searchInput");
+  const filterGaveta = document.getElementById("filterGaveta");
+  document.getElementById("btn-search").addEventListener("click", () => {
+    const q = encodeURIComponent(searchInput.value.trim());
+    const gav = encodeURIComponent(filterGaveta.value.trim());
+    const url = new URL(window.location.href);
+    url.searchParams.set('q', q);
+    url.searchParams.set('gaveta', gav);
+    url.searchParams.set('page', 1);
+    window.location.href = url.toString();
+  });
+
+  // abrir modal de edição
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      try {
+        const res = await fetch(`{{ url_for('estoque_bp.get_item', item_id='') }}/${id}`);
+        const body = await res.json();
+        if (!body.success) {
+          alert(body.mensagem || "Erro ao carregar item");
+          return;
+        }
+        const item = body.item;
+        document.getElementById('edit-id').value = item.id;
+        document.getElementById('edit-nome').value = item.nome;
+        document.getElementById('edit-presentation_value').value = item.presentation_value;
+        document.getElementById('edit-tipo').value = item.tipo;
+        document.getElementById('edit-gaveta').value = item.gaveta;
+        document.getElementById('edit-quantidade').value = item.quantidade;
+        document.getElementById('edit-descricao').value = item.descricao || "";
+        document.getElementById('edit-cost_purchase').value = (item.cost_purchase || 0)/100;
+        document.getElementById('edit-cost_internal').value = (item.cost_internal || 0)/100;
+        document.getElementById('edit-cost_patient').value = (item.cost_patient || 0)/100;
+        document.getElementById('edit-modal').classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar item para edição.");
+      }
+    });
+  });
+
+  // fechar modal
+  document.getElementById('close-edit').addEventListener('click', () => {
+    document.getElementById('edit-modal').classList.add('hidden');
+  });
+
+  // submit edição
+  document.getElementById('edit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('edit-id').value;
+    const fd = new FormData(e.target);
+    try {
+      const res = await fetch(`{{ url_for('estoque_bp.editar_item', item_id='') }}/${id}`, {
+        method: 'POST',
+        body: fd
+      });
+      const body = await res.json();
+      if (body.success) {
+        alert("✅ Item atualizado");
+        window.location.reload();
+      } else {
+        alert("Erro: " + (body.mensagem || "Não foi possível salvar"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao salvar alteração");
+    }
+  });
+
+  // deletar item
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      if (!confirm("Tem certeza que deseja remover este item?")) return;
+      try {
+        const res = await fetch(`{{ url_for('estoque_bp.remover_item', item_id='') }}/${id}`, {
+          method: 'POST'
+        });
+        const body = await res.json();
+        if (body.success) {
+          alert(body.mensagem);
+          window.location.reload();
+        } else {
+          alert("Erro: " + (body.mensagem || "Não removido"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao remover item");
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Resumo - {{ paciente_id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+  <h2 class="text-xl font-semibold mb-4">Resumo do Atendimento - {{ paciente_id }}</h2>
+
+  <div id="itens-list" class="space-y-2">
+    {% if pendente |length == 0 %}
+      <p class="text-gray-600">Nenhum item selecionado.</p>
+    {% else %}
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Item</th>
+            <th class="text-right">Qtd</th>
+            <th class="text-right">Unit</th>
+            <th class="text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in pendente["items"] %}
+          <tr>
+            <td>{{ it.nome }}</td>
+            <td class="text-right">{{ it.qty }}</td>
+            <td class="text-right">R$ {{ '%.2f'|format(it.unit_price/100) }}</td>
+            <td class="text-right">R$ {{ '%.2f'|format((it.unit_price * it.qty)/100) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="mt-4 flex justify-between items-center">
+    <div class="font-semibold">Total:</div>
+    <div class="font-semibold">R$ {{ '%.2f'|format(total_centavos/100) }}</div>
+  </div>
+
+  <div class="mt-6 flex gap-3">
+    <a href="/token/{{ paciente_id }}" class="px-4 py-2 rounded border">Voltar</a>
+    <button id="btn-confirm" class="bg-green-600 text-white px-4 py-2 rounded">Confirmar e Salvar</button>
+  </div>
+</div>
+
+<script>
+document.getElementById("btn-confirm").addEventListener("click", async () => {
+  const res = await fetch(`/resumo/confirmar/{{ paciente_id }}`, {method:"POST"});
+  const data = await res.json();
+  if (data.success) {
+    alert("✅ Registro salvo com sucesso.");
+    // volta para selecionar paciente (ou para token vazio)
+    window.location.href = "/paciente/selecionar";
+  } else {
+    alert("Erro: " + (data.mensagem || "Não foi possível salvar"));
+  }
+});
+</script>
+{% endblock %}
