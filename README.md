@@ -4,9 +4,16 @@ Este repositório apresenta a quarta sprint do SmartFlow, um sistema de controle
 
 ## Resumo do Sistema:
 
+Sistema de controle, rastreamento e responsabilização na retirada de medicamentos em carrinhos de emergência hospitalares
+
 O sistema rastreia a saída de medicamentos do carrinho de emergência e os atrela diretamente à ficha de cada paciente. Para hospitais particulares, isso permite uma gestão de estoque precisa e uma cobrança eficiente, vinculando o uso do medicamento à conta do paciente de forma automatizada e segura.
 
 <img width="1024" height="883" alt="image" src="https://github.com/user-attachments/assets/d59cfef7-3977-44dc-bdc3-cd4ba3fda8bc" />
+
+## Objetivo
+O objetivo é garantir segurança, rastreabilidade, redução de perdas e vinculação direta à ficha do paciente.
+Toda saída de item do carrinho é registrada e vinculada ao paciente, gerando histórico e suporte à cobrança hospitalar.
+
 
 - 🔗 Integração com IoT (ESP32 + RFID + Servo + LED)
 - 🧠 Cadastro de Cartões RFID Autorizados:
@@ -23,9 +30,8 @@ Acessar o vídeo da solução no YouTube: <a href="https://www.youtube.com/watch
 ## Tecnologias utilizadas
 - Python
 - Flask
-- SocketIO
-- Datetime
-- JSON
+- SocketIO (tempo real)
+- JSON para banco local
 - Tailwind
 
 ## Como instalar e rodar o projeto
@@ -39,13 +45,15 @@ Siga o passo a passo para executar o projeto
 
 1. **Clone o projeto na sua máquina com esse comando:**
 ```bash
-git clone https://github.com/GrupoCodeNexus/sprint4-python
-cd sprint4-python
+git clone https://github.com/GrupoCodeNexus/Gestao-de-Itens-SmartFlow-sprint4-python.git
+cd Gestao-de-Itens-SmartFlow-sprint4-python
 ```
 
-2. **Instalação das bibliotecas necessárias**
+2. **Instalação das bibliotecas necessárias e criando ambiente virtual para rodar o projeto**
 ```bash
-pip install flask python-socketio flask_socketio
+python -m venv venv
+source venv/bin/activate
+pip install flask flask-socketio
 ```
 
 4.  **Execute o comando para rodar o projeto:**
@@ -59,6 +67,23 @@ Após seguir esses passos o terminal irá exibir a seguinte mensagem
  * Running on http://127.0.0.1:5000
 
 Passe o mouse encima do link e use o comando (ctrl + click) ou clique em ``Follow link`` para acessar a aplicação.
+
+## Pastas principais do projeto
+
+| Pasta / Arquivo            | Função                                                                 |
+|----------------------------|------------------------------------------------------------------------|
+| app.py                     | Arquivo principal Flask que inicializa o sistema                       |
+| blueprints/                | Contém todos os módulos (paciente / estoque / token / resumo)          |
+| blueprints/paciente/       | Lógica de criação / seleção / entrada de pacientes                     |
+| blueprints/estoque/        | Controle e gestão do estoque do carrinho                               |
+| blueprints/token/          | Tela de seleção e consumo automatizado de medicamentos                 |
+| blueprints/resumo/         | Tela final de confirmação e gravação de saída                          |
+| dados/                     | Diretório raiz de persistência local                                   |
+| dados/pacientes/           | Histórico, pendências e fichas individuais dos pacientes               |
+| dados/estoque/             | JSON fixo contendo o estoque do carrinho                               |
+| templates/                 | Arquivos HTML do sistema (Jinja)                                       |
+| static/                    | Tailwind, CSS, imagens e JS estáticos                                  |
+
 
 ## Conheça nossa Equipe!
 - [Francisco Vargas](https://github.com/Franciscov25)
